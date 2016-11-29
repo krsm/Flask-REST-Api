@@ -1,0 +1,26 @@
+
+Endpoints:
+
+User Actions:
+
+    #acesstoken?
+
+    #migrations?
+
+Endpoints:
+
+User Actions:
+
+    GET /users — get a list of all users we have
+    GET /users/<user_id> — get info for a single user
+    POST /users — create a new user
+    POST /users/<user_id> — update an existing user
+    DELETE /users/<user_id> — delete an existing user
+
+Post Actions:
+
+    GET /users/<user_id>/files — get a list of all files by a user
+    GET /users/<user_id>/files/<file_id> — get an existing file
+    POST /users/<user_id>/files — create a new post for a user
+    POST /users/<user_id>/files/<file_id> — update an existing file
+    DELETE /users/<user_id>/files/<file_id> — delete an existing file
