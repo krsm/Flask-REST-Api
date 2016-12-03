@@ -6,38 +6,69 @@ import os
 
 from rest_api_app import app, db, models
 
+
 from flask import jsonify, request, abort, make_response
+from slugify import slugify
 
-
-#
-# # ------------------------------------------------------
-# # ------------------------------------------------------
-# # Inserting data
-# # Using Method Post
-# # ------------------------------------------------------
-# # ------------------------------------------------------
+# ------------------------------------------------------
 # #   Endpoints related to User Table
+# ------------------------------------------------------
+#   POST /create_user/ - create a new user
+@app.route('/create_user/', methods=['POST'])
+def create_user():
+
+    if not request.json or not 'username' in request.json:
+        abort(404)
+
+        content = request.get_json(force=True)
+
+        username = content["username"]
+        if not username:
+            username = slugify(username)
+
+        created_timestamp = datetime.datetime.now()
+
+        user = models.User(username=username, created_timestamp=created_timestamp)
+
+        #open database sesssion
+        current_session = db.session
+
+        try:
+
+            current_session.add(user)  # add opened statement to opened session
+            current_session.commit()  # commit changes
+
+        except:
+            current_session.rollback()
+            current_session.flush()  # for resetting non-committed .add()
+
+        finally:
+            current_session.close()
+
+    return "OK"
+
+
+
+
+    #     id = db.Column('id', db.Integer, primary_key=True)
+    # username = db.Column('username', db.String(28), index=True, unique=True)
+    # created_timestamp = db.Column(db.DateTime)
+    # files = db.relationship('Files', backref='user')
+
+#
+#
 # # ------------------------------------------------------
-# #   POST /create_user/ - create a new user
-# @app.route('/create_user/', methods=['POST'])
-# def createuser():
-#     """
-#     :return:
-#     """
-#     if not request.json or not 'username' in request.json:
-#         abort(404)
-#
-#
-#
-# # ------------------------------------------------------
-# # GET user details
-# @app.route('/get_user/<username>', methods=['GET'])
-# def get_user_info(username):
-#     """
-#     Query data related to username ans return as a json object
-#     """
-#     pass
-#
+# GET user details
+@app.route('/get_user/<username>', methods=['GET'])
+def get_user(username):
+  user = models.User.query.filter(username == username).firt_or_404()
+  output = {
+      "user": user.username
+  }
+    return jsonify(output)
+
+
+
 # # Delete user
 # @app.route('/delete_user/<username>')
 # def delete_user(username):
