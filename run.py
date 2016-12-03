@@ -1,4 +1,4 @@
-from news_app import app
+from rest_api_app import app
 
 
 if __name__ == '__main__':

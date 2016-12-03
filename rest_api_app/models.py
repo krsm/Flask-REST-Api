@@ -9,7 +9,7 @@ class User(db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True)
     username = db.Column('username', db.String(28), index=True, unique=True)
-    created_timestamp = db.Column(db.String(28))
+    created_timestamp = db.Column(db.DateTime)
     files = db.relationship('Files', backref='user')
 
     def __init__(self, username, created_timestamp):
